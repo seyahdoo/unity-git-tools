@@ -1,6 +1,6 @@
 ```
 yo nuke (stash all local changes and clean workspace)
-yo new branch-name (stash all local changes, make new branch from develop, checkout new branch)
+yo new branch-name (make new branch from develop, checkout new branch)
 yo fetch (fetch all data from newest develop)
 yo pull (update all local branches and workspace with newest develop)
 yo push = yo commit (commit everything and push to branch) (will fail with message on develop)
