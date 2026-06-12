@@ -4,7 +4,7 @@ git nuke -> remove all untracked files, discard all changes (alt + delete) and (
 	? - git restore .
 
 
-git new branch-name -> switch to new branch (alt + n)
+git new branch-name -> switch to new branch (alt + t)
 	git fetch --prune
 	git checkout -b new-branch-name origin/develop
 
@@ -27,7 +27,10 @@ git up -> commit everything and push all local branches (alt + s)
 
 
 [alias]
-	nuke = !git clean -f && git restore . #
-	new = !git fetch --prune && git switch -c \"$1\" origin/develop #
+	nuke = !git stash push --include-untracked
+	new = !git fetch --prune && git switch origin/develop --detach && git switch -c
+	up = !git add . && git commit -a --allow-empty-message -m '' && git down && git push
+	down = !git pull
+	prep = !git fetch --prune --progress && git lfs fetch origin develop
 
 
