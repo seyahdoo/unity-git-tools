@@ -24,11 +24,11 @@ def main():
     parser_pull = subparsers.add_parser('pull', help='update all local branches and workspace with newest default branch')
     parser_pull.set_defaults(func=pull)
 
-    parser_push = subparsers.add_parser('push', help='commit everything and push to current branch')
+    parser_push = subparsers.add_parser('push', help='push current branch to remote')
     parser_push.set_defaults(func=push)
 
     parser_commit = subparsers.add_parser('commit', help='commit everything and push to current branch')
-    parser_commit.set_defaults(func=push)
+    parser_commit.set_defaults(func=commit)
 
     parser_pr = subparsers.add_parser('pr', help='make new pr from current branch to default branch')
     parser_pr.add_argument('pr_title')
@@ -61,9 +61,12 @@ def pull(args):
     run(["git", "merge", f"origin/{default_branch}", "--no-edit"])
     run(["git", "push"])
 
-def push(args):
+def commit(args):
     run(["git", "add", "."])
     run(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
+    return run(["git", "push"])
+
+def push(args):
     return run(["git", "push"])
 
 def pr(args):
