@@ -32,6 +32,7 @@ def main():
     parser_push.set_defaults(func=push)
 
     parser_pr = subparsers.add_parser('pr', help='make new pr from current branch to default branch')
+    parser_new.add_argument('pr_title')
     parser_pr.set_defaults(func=pr)
 
     parser_merge = subparsers.add_parser('merge', help='squash merge current branch to default branch')
