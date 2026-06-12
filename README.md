@@ -1,3 +1,5 @@
+```
+
 git nuke -> remove all untracked files, discard all changes (alt + delete) and (alt + w)? maybe
   git stack everything
 	? - git clean -f
@@ -34,3 +36,4 @@ git up -> commit everything and push all local branches (alt + s)
 	prep = !git fetch --prune --progress && git lfs fetch origin develop
 
 
+```
