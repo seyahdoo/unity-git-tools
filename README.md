@@ -1,3 +1,21 @@
+# Setup
+
+- If you wanna use, yo pr and yo merge you have to setup github pat
+- https://github.com/settings/personal-access-tokens
+- Generate new token
+- Permissions -> Contents (read and write), Pull requests (read and write), Metadata
+- Then run this commands for the repo
+
+  
+```
+git config set yo.default-branch "main"
+git config set yo.github-access-token "github_pat_XXXXXXXXXXXXXXXX"
+```
+
+- You are now all set
+
+# Commands
+
 ```
 yo nuke (stash all local changes and clean workspace)
 yo new branch-name (make new branch from develop, checkout new branch)
