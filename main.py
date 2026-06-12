@@ -11,9 +11,6 @@ def main():
 
     subparsers = parser.add_subparsers(help='command')
 
-    parser_clone = subparsers.add_parser('clone', help='clone new repo')
-    parser_clone.set_defaults(func=clone)
-
     parser_nuke = subparsers.add_parser('nuke', help='clean the workplace non-destructively')
     parser_nuke.set_defaults(func=nuke)
 
@@ -39,10 +36,6 @@ def main():
     
     args = parser.parse_args()
     return args.func(args)
-
-def clone(args):
-    print("not implemented yet")
-    return 1
 
 def nuke(args):
     result = run(["git", "stash", "push", "--include-untracked"])
