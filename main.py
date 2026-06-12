@@ -115,7 +115,6 @@ def pr(settings, args):
     print(response.json()["errors"][0]["message"])
     return 1
 
-
 def get_github_auth():
     with open(".yoauth.json") as json_file:
         auth = json.load(json_file)
