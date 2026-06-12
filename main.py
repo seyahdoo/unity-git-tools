@@ -169,10 +169,11 @@ def merge(settings, args):
         return 1
     
     print(response.json()["message"])
-    fetch(settings, args)
+    run(["git", "fetch", "--prune", "--progress"])
     run(["git", "fetch", "origin", f"{default_branch}:{default_branch}"])
     run(["git", "checkout", default_branch])
     run(["git", "branch", "-d", current_branch])
+    run(["git", "fetch", "--prune", "--progress"])
     return 0
 
 
