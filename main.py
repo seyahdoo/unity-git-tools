@@ -172,6 +172,8 @@ def merge(settings, args):
     fetch(settings, args)
     run(["git", "fetch", "origin", f"{default_branch}:{default_branch}"])
     run(["git", "checkout", default_branch])
+    run(["git", "branch", "-d", current_branch])
+    fetch(settings, args)
     return 0
 
 
