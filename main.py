@@ -135,9 +135,19 @@ def merge(settings, args):
 
     origin_url = run_and_get_output(["git", "config", "--get", "remote.origin.url"]).strip()
     if not origin_url.startswith("git@github.com:"):
-        print("Not a GitHub repository, will not create a pr")
+        print("Not a GitHub repository, will not merge a pr")
         return 1
     repo_id = origin_url.removeprefix("git@github.com:").removesuffix(".git")
+
+    headers = {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': f'Bearer {token}',
+        'X-GitHub-Api-Version': '2026-03-10',
+    }
+    response = requests.get(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers)
+
+    j = response.json()
+
 
     headers = {
         'Accept': 'application/vnd.github+json',
@@ -146,7 +156,7 @@ def merge(settings, args):
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     data = '{"merge_method":"squash"}'
-    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/4/merge', headers=headers, data=data)
+    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/5/merge', headers=headers, data=data)
     if response.status_code != 200:
         print("Error when merging pull request")
         print(response.json()["message"])
