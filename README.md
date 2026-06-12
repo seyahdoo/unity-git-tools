@@ -9,7 +9,7 @@ git new branch-name -> switch to new branch (alt + n)
 	git checkout -b new-branch-name origin/develop
 
 
-git prep -> fetch all new lfs files and commits (alt + delete)
+git prep -> fetch all new lfs files and commits (alt + f)
 	git fetch --prune
 	git lfs fetch --recent
 	
@@ -20,13 +20,14 @@ git down -> rebase all local branches with develop (alt + r)
 
 
 git up -> commit everything and push all local branches (alt + s)
+	git add .
   	git commit -a --allow-empty-message -m ''
 	git down
 	git push
 
 
-
-git config --global alias.nuke "!git clean -f && git restore ."
-git config --global alias.new "!git fetch --prune && git switch -c $1 origin/develop"
+[alias]
+	nuke = !git clean -f && git restore . #
+	new = !git fetch --prune && git switch -c \"$1\" origin/develop #
 
 
