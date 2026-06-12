@@ -69,7 +69,7 @@ def fetch(settings, args):
 def pull(settings, args):
     default = settings["default-branch"]
     fetch(settings, args)
-    run("git", "merge", "origin/"+default)
+    run(["git", "merge", f"origin/{default}"])
     run(["git", "push"])
 
 def push(settings, args):
