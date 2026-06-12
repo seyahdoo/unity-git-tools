@@ -170,6 +170,8 @@ def merge(settings, args):
     
     print(response.json()["message"])
     fetch(settings, args)
+    run(["git", "fetch", "origin", f"{default_branch}:{default_branch}"])
+    run(["git", "checkout", default_branch])
     return 0
 
 
