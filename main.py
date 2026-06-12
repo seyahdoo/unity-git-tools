@@ -60,7 +60,7 @@ def new(settings, args):
     run(["git", "stash", "push", "--include-untracked"])
     run(["git", "fetch", "--prune"])
     run(["git", "switch", f"origin/{settings["default-branch"]}", "--detach"])
-    return run(["git", "switch", "-c", args.argument_one])
+    return run(["git", "switch", "-c", args.branch_name])
 
 def fetch(settings, args):
     run(["git", "fetch", "--prune", "--progress"])
@@ -68,8 +68,29 @@ def fetch(settings, args):
 
 def pull(settings, args):
     # foreach local branch merge latest develop
-    print("not implemented yet")
-    return 1
+    # Source: https://stackoverflow.com/questions/3408532/merging-without-changing-the-working-directory
+
+    # git for-each-ref --format='%(refname:short)' refs/heads/
+    b = run_and_get_output(["git", "for-each-ref", "--format=%(refname:short)", "refs/heads/"])
+    branches = b.splitlines()
+    print(branches)
+    
+    default = settings["default-branch"]
+    
+    for branch in branches:
+        if branch == default:
+            continue
+            
+        if run_and_get_output(["git", "merge-base", branch, default]).strip() == run_and_get_output(["git", "rev-parse", default]).strip():
+            tree = run_and_get_output(["git", "log", "-n", "1", "--pretty=%T", branch]).strip()
+            process = subprocess.run(["git", "commit-tree", tree, "-p", default, "-p", branch], input=f'Merge branch {branch}'.encode('utf-8'), stdout=subprocess.PIPE)
+            new_commit = process.stdout.decode('utf-8')
+            run_and_get_output(["git", "update-ref", "-m", f"merge {branch}: Merge made by simulated no-ff", f"refs/heads/{branch}", new_commit])
+            #newcommit=$(echo "Merge branch 'branch'" | git commit-tree tree -p default -p branch)
+            # git update-ref -m "merge $currentbranch: Merge made by simulated no-ff" "refs/heads/$branch" $newcommit
+        else:
+            print(f"cant ff {branch}")
+    return 0
 
 def push(settings, args):
     run(["git", "add", "."])
@@ -90,6 +111,12 @@ def run(arr):
     print(arr)
     proc = subprocess.run(arr)
     return proc.returncode
+
+def run_and_get_output(args):
+    print(args)
+    result = subprocess.run(args, stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf-8')
+    return output
 
 if __name__ == '__main__':
     try:
