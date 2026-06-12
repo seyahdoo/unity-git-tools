@@ -171,7 +171,7 @@ def get_default_branch():
     default = run_and_get_output(["git", "config", "yo.default-branch"]).strip()
     if default:
         return default
-    return "develop"
+    return "main"
 
 def get_github_access_token():
     pat = run_and_get_output(["git", "config", "yo.github-access-token"]).strip()
