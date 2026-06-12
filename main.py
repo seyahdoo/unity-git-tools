@@ -67,37 +67,10 @@ def fetch(settings, args):
     return run(["git", "lfs", "fetch", "origin", settings["default-branch"]])
 
 def pull(settings, args):
-    # foreach local branch merge latest develop
-    # Source: https://stackoverflow.com/questions/3408532/merging-without-changing-the-working-directory
-
-    # git for-each-ref --format='%(refname:short)' refs/heads/
-    b = run_and_get_output(["git", "for-each-ref", "--format=%(refname:short)", "refs/heads/"])
-    branches = b.splitlines()
-    print(branches)
-    
     default = settings["default-branch"]
-    
-    for branch in branches:
-        if branch == default:
-            continue
-
-        r = run(["git", "merge-base", "origin/"+default, branch, "--is-ancestor"])
-        print(r)
-        
-        
-        if run_and_get_output(["git", "merge-base", branch, "origin/"+default]).strip() == run_and_get_output(["git", "rev-parse", "origin/"+default]).strip():
-            tree = run_and_get_output(["git", "log", "-n", "1", "--pretty=%T", "origin/"+default]).strip()
-            process = subprocess.run(["git", "commit-tree", tree, "-p", branch, "-p", "origin/"+default], input=f'Merge branch {default}'.encode('utf-8'), stdout=subprocess.PIPE)
-            new_commit = process.stdout.decode('utf-8').strip()
-            run_and_get_output(["git", "update-ref", "-m", f"\"merge {default}: Merge made by simulated no-ff\"", f"refs/heads/{branch}", new_commit])
-# make the commit
-# newcommit=$(echo "Merge branch '$currentbranch'" | git commit-tree $(git log -n 1 --pretty=%T HEAD) -p $branch -p HEAD)
-# move the branch to point to the new commit
-# git update-ref -m "merge $currentbranch: Merge made by simulated no-ff" "refs/heads/$branch" $newcommit
-            pass
-        else:
-            print(f"cant ff {branch}")
-    return 0
+    fetch(settings, args)
+    run("git", "merge", "origin/"+default)
+    run(["git", "push"])
 
 def push(settings, args):
     run(["git", "add", "."])
