@@ -3,6 +3,9 @@ import subprocess
 import argparse
 import json
 
+import requests
+
+
 def main():
     settings = load_settings()
     
@@ -32,7 +35,7 @@ def main():
     parser_push.set_defaults(func=push)
 
     parser_pr = subparsers.add_parser('pr', help='make new pr from current branch to default branch')
-    parser_new.add_argument('pr_title')
+    parser_pr.add_argument('pr_title')
     parser_pr.set_defaults(func=pr)
 
     parser_merge = subparsers.add_parser('merge', help='squash merge current branch to default branch')
@@ -79,9 +82,44 @@ def push(settings, args):
     return run(["git", "push"])
 
 def pr(settings, args):
-    print("not implemented yet")
+    token = get_github_auth()
+    default_branch = settings["default-branch"]
+    pr_title = args.pr_title
+    current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
+    
+    origin_url = run_and_get_output(["git", "config", "--get", "remote.origin.url"]).strip()
+    if not origin_url.startswith("git@github.com:"):
+        return 1
+        
+    repo_id = origin_url.removeprefix("git@github.com:").removesuffix(".git")
+    
+    headers = {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': f'Bearer {token}',
+        'X-GitHub-Api-Version': '2026-03-10',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    
+    data = {
+        "title": pr_title,
+        "head": current_branch,
+        "base": default_branch
+    }
+    
+    response = requests.post(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers, data=json.dumps(data))
+    if response.status_code == 201:
+        print("Pull request created successfully")
+        return 0
+    
+    print("Error when creating pull request")
+    print(response.json()["errors"][0]["message"])
     return 1
 
+
+def get_github_auth():
+    with open(".yoauth.json") as json_file:
+        auth = json.load(json_file)
+        return auth["github-access-token"]
 
 def merge(settings, args):
     print("not implemented yet")
