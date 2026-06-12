@@ -169,6 +169,7 @@ def merge(settings, args):
         return 1
     
     print(response.json()["message"])
+    fetch(settings, args)
     return 0
 
 
