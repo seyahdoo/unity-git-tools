@@ -9,8 +9,7 @@ def main():
         description='Simplified git process tools')
     parser.add_argument('command')
     args = parser.parse_args()
-    with (open(".yosettings.json", mode="r", encoding="utf-8") as file):
-        settings = json.load(file)
+    settings = load_settings()
     
     if args.command == "nuke":
         return nuke()
@@ -19,6 +18,11 @@ def main():
         return new(settings, args)
 
     return 1
+
+def load_settings():
+    with open(".yosettings.json") as json_file:
+        settings = json.load(json_file)
+        return settings
 
 def nuke():
     result = run(["git", "stash", "push", "--include-untracked"])
@@ -33,7 +37,7 @@ def new(settings, args):
 
 def run(arr):
     print(arr)
-    proc = subprocess.run(arr)
+    # proc = subprocess.run(arr)
     return proc.returncode
 
 if __name__ == '__main__':
@@ -41,4 +45,4 @@ if __name__ == '__main__':
         return_code = main()
     except Exception:
         return_code = 1
-    # sys.exit(return_code)
+    sys.exit(return_code)
