@@ -147,7 +147,14 @@ def merge(settings, args):
     response = requests.get(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers)
 
     j = response.json()
+    pr_number = -1
+    for pr in j:
+        if pr["head"]["ref"] == current_branch:
+            pr_number = pr["number"]
 
+    if pr_number == -1:
+        print("PR has not been found. Please create PR with \"yo pr [title]\"")
+        return 1
 
     headers = {
         'Accept': 'application/vnd.github+json',
@@ -156,7 +163,7 @@ def merge(settings, args):
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     data = '{"merge_method":"squash"}'
-    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/5/merge', headers=headers, data=data)
+    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/{pr_number}/merge', headers=headers, data=data)
     if response.status_code != 200:
         print("Error when merging pull request")
         print(response.json()["message"])
