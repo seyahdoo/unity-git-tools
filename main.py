@@ -62,6 +62,13 @@ def pull(args):
     run(["git", "push"])
 
 def commit(args):
+    default_branch = get_default_branch()
+    current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
+    
+    if current_branch == default_branch:
+        print("Cannot fast commit on default branch")
+        return 1
+    
     run(["git", "add", "."])
     run(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
     return run(["git", "push"])
