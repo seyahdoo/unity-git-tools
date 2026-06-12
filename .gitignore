@@ -1,0 +1,5 @@
+﻿backup-service.log
+dist/
+build/
+*.spec
+*.pyc
