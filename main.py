@@ -3,12 +3,13 @@ import subprocess
 import argparse
 import json
 
-def main():    
+def main():
     parser = argparse.ArgumentParser(
         prog='Yo Git Tools',
         description='Simplified git process tools')
     parser.add_argument('command')
     args = parser.parse_args()
+
     settings = load_settings()
     
     if args.command == "nuke":
@@ -37,12 +38,13 @@ def new(settings, args):
 
 def run(arr):
     print(arr)
-    # proc = subprocess.run(arr)
+    proc = subprocess.run(arr)
     return proc.returncode
 
 if __name__ == '__main__':
     try:
         return_code = main()
-    except Exception:
+    except Exception as e:
+        print(e)
         return_code = 1
     sys.exit(return_code)
