@@ -74,7 +74,7 @@ def commit(args):
     return run(["git", "push"])
 
 def push(args):
-    return run(["git", "push"])
+    return run(["git", "push", "--tags"])
 
 def pr(args):
     token = get_github_access_token()
