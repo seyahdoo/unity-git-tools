@@ -23,3 +23,4 @@ yo new branch-name
 yo fetch
 yo pull
 yo push
+yo merge
