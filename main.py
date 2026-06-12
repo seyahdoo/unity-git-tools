@@ -30,9 +30,12 @@ def main():
     return 1
 
 def load_settings():
-    with open(".yosettings.json") as json_file:
-        settings = json.load(json_file)
-        return settings
+    try:
+        with open(".yosettings.json") as json_file:
+            settings = json.load(json_file)
+            return settings
+    except FileNotFoundError:
+        return {"default-branch": "develop"}
 
 def nuke():
     result = run(["git", "stash", "push", "--include-untracked"])
