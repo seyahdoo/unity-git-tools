@@ -19,8 +19,7 @@ def main():
         settings = json.load(file)
     
     if args.command == "nuke":
-        result = run(["git", "stash", "push", "--include-untracked"])
-        return result.returncode
+        return nuke()
     
     if args.command == "new":
         run(["git", "stash", "push", "--include-untracked"])
@@ -29,13 +28,17 @@ def main():
         result = run(["git", "switch", "-c", args.argument_one])
         return result.returncode
 
+    ## asdasd
 
     return 1
 
+def nuke():
+    result = run(["git", "stash", "push", "--include-untracked"])
+    return result
+
 def run(arr):
     print(arr)
-    proc = subprocess.Popen(arr, shell=False)
-    proc.communicate()
+    proc = subprocess.run(arr, shell=False)
     return proc.returncode
 
 if __name__ == '__main__':
