@@ -21,13 +21,13 @@ yo nuke
     stash all local changes and clean workspace
 
 yo new branch-name
-    make new branch from develop, checkout new branch
+    make new branch from main, checkout new branch
 
 yo fetch
-    fetch all data from newest develop
+    fetch all data from newest main
 
 yo pull
-    update current branche and workspace with newest develop
+    update current branche and workspace with newest main
 
 yo push
     commit everything and push to branch
@@ -36,8 +36,8 @@ yo commit
     commit everything with an empty message, push to remote
 
 yo pr title
-    make new pr from current branch to develop
+    make new pr from current branch to main
 
 yo merge
-    squash merge current branch to develop
+    squash merge current branch to main
 ```
