@@ -85,9 +85,11 @@ def pull(settings, args):
             tree = run_and_get_output(["git", "log", "-n", "1", "--pretty=%T", branch]).strip()
             process = subprocess.run(["git", "commit-tree", tree, "-p", default, "-p", branch], input=f'Merge branch {branch}'.encode('utf-8'), stdout=subprocess.PIPE)
             new_commit = process.stdout.decode('utf-8').strip()
-            run_and_get_output(["git", "update-ref", "-m", f"merge {branch}: Merge made by simulated no-ff", f"refs/heads/{branch}", new_commit])
-            #newcommit=$(echo "Merge branch 'branch'" | git commit-tree tree -p default -p branch)
-            # git update-ref -m "merge $currentbranch: Merge made by simulated no-ff" "refs/heads/$branch" $newcommit
+            run_and_get_output(["git", "update-ref", "-m", f"merge {branch}: Merge made by simulated no-ff", f"refs/heads/{default}", new_commit])
+# make the commit
+# newcommit=$(echo "Merge branch '$currentbranch'" | git commit-tree $(git log -n 1 --pretty=%T HEAD) -p $branch -p HEAD)
+# move the branch to point to the new commit
+# git update-ref -m "merge $currentbranch: Merge made by simulated no-ff" "refs/heads/$branch" $newcommit
         else:
             print(f"cant ff {branch}")
     return 0
