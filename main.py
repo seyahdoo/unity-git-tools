@@ -76,6 +76,7 @@ def pull(settings, args):
     print(branches)
     
     default = settings["default-branch"]
+    default = "origin/" + default
     
     for branch in branches:
         if branch == default:
