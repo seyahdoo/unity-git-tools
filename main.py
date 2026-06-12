@@ -2,13 +2,9 @@
 import subprocess
 import argparse
 import json
-
 import requests
 
-
 def main():
-    settings = load_settings()
-    
     parser = argparse.ArgumentParser(
         prog='Yo Git Tools',
         description='Simplified git process tools')
@@ -42,47 +38,41 @@ def main():
     parser_merge.set_defaults(func=merge)
     
     args = parser.parse_args()
-    return args.func(settings, args)
+    return args.func(args)
 
-def load_settings():
-    try:
-        with open(".yosettings.json") as json_file:
-            settings = json.load(json_file)
-            return settings
-    except FileNotFoundError:
-        return {"default-branch": "develop"}
-
-def clone(settings, args):
+def clone(args):
     print("not implemented yet")
     return 1
 
-def nuke(settings, args):
+def nuke(args):
     result = run(["git", "stash", "push", "--include-untracked"])
     return result
 
-def new(settings, args):
+def new(args):
+    default_branch = get_default_branch()
     run(["git", "fetch", "--prune"])
-    run(["git", "switch", f"origin/{settings["default-branch"]}", "--detach"])
+    run(["git", "switch", f"origin/{default_branch}", "--detach"])
     return run(["git", "switch", "-c", args.branch_name])
 
-def fetch(settings, args):
+def fetch(args):
+    default_branch = get_default_branch()
     run(["git", "fetch", "--prune", "--progress"])
-    return run(["git", "lfs", "fetch", "origin", settings["default-branch"]])
+    return run(["git", "lfs", "fetch", "origin", default_branch])
 
-def pull(settings, args):
-    default = settings["default-branch"]
-    fetch(settings, args)
-    run(["git", "merge", f"origin/{default}", "--no-edit"])
+def pull(args):
+    default_branch = get_default_branch()
+    fetch(args)
+    run(["git", "merge", f"origin/{default_branch}", "--no-edit"])
     run(["git", "push"])
 
-def push(settings, args):
+def push(args):
     run(["git", "add", "."])
     run(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
     return run(["git", "push"])
 
-def pr(settings, args):
-    token = get_github_auth()
-    default_branch = settings["default-branch"]
+def pr(args):
+    token = get_github_access_token()
+    default_branch = get_default_branch()
     pr_title = args.pr_title
     current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
 
@@ -118,14 +108,9 @@ def pr(settings, args):
     print("Pull request created successfully")
     return 0
 
-def get_github_auth():
-    with open(".yoauth.json") as json_file:
-        auth = json.load(json_file)
-        return auth["github-access-token"]
-
-def merge(settings, args):
-    token = get_github_auth()
-    default_branch = settings["default-branch"]
+def merge(args):
+    token = get_github_access_token()
+    default_branch = get_default_branch()
     current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
     
     if current_branch == default_branch:
@@ -176,6 +161,17 @@ def merge(settings, args):
     run(["git", "fetch", "--prune", "--progress"])
     return 0
 
+def get_default_branch():
+    default = run_and_get_output(["git", "config", "yo.default-branch"]).strip()
+    if default:
+        return default
+    return "develop"
+
+def get_github_access_token():
+    pat = run_and_get_output(["git", "config", "yo.github-access-token"]).strip()
+    if pat:
+        return pat
+    return ""
 
 def run(arr):
     print(arr)
