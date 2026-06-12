@@ -27,6 +27,9 @@ def main():
     parser_push = subparsers.add_parser('push', help='commit everything and push to current branch')
     parser_push.set_defaults(func=push)
 
+    parser_commit = subparsers.add_parser('commit', help='commit everything and push to current branch')
+    parser_commit.set_defaults(func=push)
+
     parser_pr = subparsers.add_parser('pr', help='make new pr from current branch to default branch')
     parser_pr.add_argument('pr_title')
     parser_pr.set_defaults(func=pr)
