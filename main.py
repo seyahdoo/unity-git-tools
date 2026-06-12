@@ -80,7 +80,11 @@ def pull(settings, args):
     for branch in branches:
         if branch == default:
             continue
-            
+
+        r = run(["git", "merge-base", "origin/"+default, branch, "--is-ancestor"])
+        print(r)
+        
+        
         if run_and_get_output(["git", "merge-base", branch, "origin/"+default]).strip() == run_and_get_output(["git", "rev-parse", "origin/"+default]).strip():
             tree = run_and_get_output(["git", "log", "-n", "1", "--pretty=%T", "origin/"+default]).strip()
             process = subprocess.run(["git", "commit-tree", tree, "-p", branch, "-p", "origin/"+default], input=f'Merge branch {default}'.encode('utf-8'), stdout=subprocess.PIPE)
