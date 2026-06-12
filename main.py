@@ -60,7 +60,7 @@ def new(settings, args):
     run(["git", "stash", "push", "--include-untracked"])
     run(["git", "fetch", "--prune"])
     run(["git", "switch", f"origin/{settings["default-branch"]}", "--detach"])
-    return run(["git", "switch", "-c", args.argument_one])
+    return run(["git", "switch", "-c", args.branch_name])
 
 def fetch(settings, args):
     run(["git", "fetch", "--prune", "--progress"])
