@@ -61,7 +61,6 @@ def nuke(settings, args):
     return result
 
 def new(settings, args):
-    run(["git", "stash", "push", "--include-untracked"])
     run(["git", "fetch", "--prune"])
     run(["git", "switch", f"origin/{settings["default-branch"]}", "--detach"])
     return run(["git", "switch", "-c", args.branch_name])
