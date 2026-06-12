@@ -85,6 +85,7 @@ def pr(settings, args):
     token = get_github_auth()
     default_branch = settings["default-branch"]
     pr_title = args.pr_title
+    current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
     
     origin_url = run_and_get_output(["git", "config", "--get", "remote.origin.url"]).strip()
     if not origin_url.startswith("git@github.com:"):
@@ -99,11 +100,21 @@ def pr(settings, args):
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     
-    data = f'{"title":"{pr_title}","head":"octocat:new-feature","base":"{default_branch}"}'
+    data = {
+        "title": pr_title,
+        "head": current_branch,
+        "base": default_branch
+    }
     
-    response = requests.post(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers, data=data)
+    response = requests.post(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers, data=json.dumps(data))
+    if response.status_code == 201:
+        print("Pull request created successfully")
+        return 0
     
-    return 0
+    print("Error when creating pull request")
+    print(response.json()["errors"][0]["message"])
+    return 1
+
 
 def get_github_auth():
     with open(".yoauth.json") as json_file:
