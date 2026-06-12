@@ -22,6 +22,6 @@ yo nuke
 yo new branch-name
 yo fetch
 yo pull
-yo push
+yo push = yo commit
 yo merge
 ```
