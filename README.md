@@ -1,5 +1,3 @@
-# TODO
-
 git nuke -> remove all untracked files, discard all changes (ctrl + shift + delete) and (ctrl + shift + w)? maybe
   git stack everything
 	? - git clean -f
