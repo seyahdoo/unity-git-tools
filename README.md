@@ -16,7 +16,7 @@ git up -> commit everything and push all local branches (alt + s)
 
 ```
 
-
+```
 yo clone
 yo nuke
 yo new branch-name
@@ -24,3 +24,4 @@ yo fetch
 yo pull
 yo push
 yo merge
+```
