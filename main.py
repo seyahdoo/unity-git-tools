@@ -127,7 +127,6 @@ def get_github_auth():
 def merge(settings, args):
     token = get_github_auth()
     default_branch = settings["default-branch"]
-    pr_title = args.pr_title
     current_branch = run_and_get_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip()
     
     if current_branch == default_branch:
@@ -147,10 +146,13 @@ def merge(settings, args):
         'Content-Type': 'application/x-www-form-urlencoded',
     }
     data = '{"merge_method":"squash"}'
-    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/PULL_NUMBER/merge', headers=headers, data=data)
+    response = requests.put(f'https://api.github.com/repos/{repo_id}/pulls/4/merge', headers=headers, data=data)
+    if response.status_code != 200:
+        print("Error when merging pull request")
+        print(response.json()["message"])
+        return 1
     
-    j = response.json()
-    
+    print(response.json()["message"])
     return 0
 
 
