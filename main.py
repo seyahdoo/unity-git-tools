@@ -103,10 +103,7 @@ def pr(settings, args):
     
     response = requests.post(f'https://api.github.com/repos/{repo_id}/pulls', headers=headers, data=data)
     
-    
-    
-    print("not implemented yet")
-    return 1
+    return 0
 
 def get_github_auth():
     with open(".yoauth.json") as json_file:
