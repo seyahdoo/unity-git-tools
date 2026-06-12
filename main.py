@@ -18,7 +18,7 @@ def main():
         case "new":
             return new(settings, args)
         case "fetch":
-            return fetch()
+            return fetch(settings)
         case "pull":
             return pull()
         case "push":
