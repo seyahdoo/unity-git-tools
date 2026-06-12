@@ -9,37 +9,36 @@ def main():
     parser = argparse.ArgumentParser(
         prog='Yo Git Tools',
         description='Simplified git process tools')
-    # parser.add_argument('command', 
-    #                     choices=['nuke', 'new', 'fetch', "pull", "push", "pr", "merge"])
 
-    subparsers = parser.add_subparsers(help='subcommand help')
+    subparsers = parser.add_subparsers(help='command')
 
-    parser_a = subparsers.add_parser('nuke', help='clean the workplace non destuctively')
-    parser_a.set_defaults(func=nuke)
+    parser_clone = subparsers.add_parser('clone', help='clone new repo')
+    parser_clone.set_defaults(func=clone)
 
-    parser_b = subparsers.add_parser('new', help='creates a new branch from origin default and checks out')
-    parser_b.add_argument('branch_name')
-    parser_b.set_defaults(func=new)
+    parser_nuke = subparsers.add_parser('nuke', help='clean the workplace non-destructively')
+    parser_nuke.set_defaults(func=nuke)
+
+    parser_new = subparsers.add_parser('new', help='creates a new branch from origin default and checks out')
+    parser_new.add_argument('branch_name')
+    parser_new.set_defaults(func=new)
+
+    parser_fetch = subparsers.add_parser('fetch', help='fetch all data from newest default branch')
+    parser_fetch.set_defaults(func=fetch)
+
+    parser_pull = subparsers.add_parser('pull', help='update all local branches and workspace with newest default branch')
+    parser_pull.set_defaults(func=pull)
+
+    parser_push = subparsers.add_parser('push', help='commit everything and push to current branch')
+    parser_push.set_defaults(func=push)
+
+    parser_pr = subparsers.add_parser('pr', help='make new pr from current branch to default branch')
+    parser_pr.set_defaults(func=pr)
+
+    parser_merge = subparsers.add_parser('merge', help='squash merge current branch to default branch')
+    parser_merge.set_defaults(func=merge)
     
     args = parser.parse_args()
-    args.func(settings, args)
-    
-    # match args.command:
-    #     case "nuke":
-    #         return nuke()
-    #     case "new":
-    #         return new(settings, args)
-    #     case "fetch":
-    #         return fetch(settings)
-    #     case "pull":
-    #         return pull()
-    #     case "push":
-    #         return push()
-    #     case "pr":
-    #         return pr()
-    #     case "merge":
-    #         return merge()
-    return 1
+    return args.func(settings, args)
 
 def load_settings():
     try:
@@ -48,6 +47,10 @@ def load_settings():
             return settings
     except FileNotFoundError:
         return {"default-branch": "develop"}
+
+def clone(settings, args):
+    print("not implemented yet")
+    return 1
 
 def nuke(settings, args):
     result = run(["git", "stash", "push", "--include-untracked"])
