@@ -1,3 +1,11 @@
+# To Git Client 
+An extremely opinionated git client that just works if you work exacly like me.
+
+- does not care about the commit messages on branch commits
+- will make a branch and push if you try to commit on main branch
+- tools to make and merge prs and auto switch back to main when pr merges
+
+
 # Setup
 
 - If you wanna use, yo pr and yo merge you have to setup github pat
