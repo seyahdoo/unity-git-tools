@@ -41,3 +41,14 @@ yo pr title
 yo merge
     squash merge current branch to main
 ```
+
+# Unity Integration
+- mission bar at the top, showing current branch name
+- fetches every 15 minutes with lfs
+- will show incoming changes if found fetch
+- press to pull everything to curent branch
+- ctrl alt shift s to make a blank commit on current branch, will make a new temp branch if on main
+- ctrl alt shift z back to most recent commit
+- ctl alt shift p make a pr
+- crtl alt shift m merge current pr
+- ctrl alt shift f fetch and pull changes to current branch
