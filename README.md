@@ -1,4 +1,4 @@
-# To Git Client 
+# Yo Git Client 
 An extremely opinionated git client that just works if you work exacly like me.
 
 - does not care about the commit messages on branch commits
