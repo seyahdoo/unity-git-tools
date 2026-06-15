@@ -41,25 +41,25 @@ def main():
     return args.func(args)
 
 def nuke(args):
-    result = run(["git", "stash", "push", "--include-untracked"])
+    result = run_or_throw(["git", "stash", "push", "--include-untracked"])
     return result
 
 def new(args):
     default_branch = get_default_branch()
-    run(["git", "fetch", "--prune"])
-    run(["git", "switch", f"origin/{default_branch}", "--detach"])
-    return run(["git", "switch", "-c", args.branch_name])
+    run_or_throw(["git", "fetch", "--prune"])
+    run_or_throw(["git", "switch", f"origin/{default_branch}", "--detach"])
+    return run_or_throw(["git", "switch", "-c", args.branch_name])
 
 def fetch(args):
     default_branch = get_default_branch()
-    run(["git", "fetch", "--prune", "--progress"])
-    return run(["git", "lfs", "fetch", "origin", default_branch])
+    run_or_throw(["git", "fetch", "--prune", "--progress"])
+    return run_or_throw(["git", "lfs", "fetch", "origin", default_branch])
 
 def pull(args):
     default_branch = get_default_branch()
     fetch(args)
-    run(["git", "merge", f"origin/{default_branch}", "--no-edit"])
-    run(["git", "push"])
+    run_or_throw(["git", "merge", f"origin/{default_branch}", "--no-edit"])
+    run_or_throw(["git", "push"])
 
 def commit(args):
     default_branch = get_default_branch()
@@ -68,13 +68,13 @@ def commit(args):
     if current_branch == default_branch:
         print("Cannot fast commit on default branch")
         return 1
-    
-    run(["git", "add", "-A"])
-    run(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
-    return run(["git", "push"])
+
+    run_or_throw(["git", "add", "-A"])
+    run_or_throw(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
+    return run_or_throw(["git", "push"])
 
 def push(args):
-    return run(["git", "push", "--tags"])
+    return run_or_throw(["git", "push", "--tags"])
 
 def pr(args):
     token = get_github_access_token()
@@ -146,6 +146,8 @@ def merge(args):
         print("PR has not been found. Please create PR with \"yo pr [title]\"")
         return 1
 
+    run_or_throw(["git", "push"])
+
     headers = {
         'Accept': 'application/vnd.github+json',
         'Authorization': f'Bearer {token}',
@@ -160,11 +162,11 @@ def merge(args):
         return 1
     
     print(response.json()["message"])
-    run(["git", "fetch", "--prune", "--progress"])
-    run(["git", "fetch", "origin", f"{default_branch}:{default_branch}"])
-    run(["git", "checkout", default_branch])
-    run(["git", "branch", "-D", current_branch])
-    run(["git", "fetch", "--prune", "--progress"])
+    run_or_throw(["git", "fetch", "--prune", "--progress"])
+    run_or_throw(["git", "fetch", "origin", f"{default_branch}:{default_branch}"])
+    run_or_throw(["git", "checkout", default_branch])
+    run_or_throw(["git", "branch", "-D", current_branch])
+    run_or_throw(["git", "fetch", "--prune", "--progress"])
     return 0
 
 def get_default_branch():
@@ -179,9 +181,11 @@ def get_github_access_token():
         return pat
     return ""
 
-def run(arr):
+def run_or_throw(arr):
     print(arr)
     proc = subprocess.run(arr)
+    if proc.returncode != 0:
+        raise Exception(f"Error when running command. Return code: {str(proc.returncode)}")
     return proc.returncode
 
 def run_and_get_output(args):
