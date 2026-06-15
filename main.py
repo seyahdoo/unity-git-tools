@@ -69,7 +69,7 @@ def commit(args):
         print("Cannot fast commit on default branch")
         return 1
     
-    run(["git", "add", "."])
+    run(["git", "add", "-A"])
     run(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
     return run(["git", "push"])
 
