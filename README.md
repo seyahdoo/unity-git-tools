@@ -5,6 +5,7 @@ An extremely opinionated git client that just works if you work exacly like me.
 - will make a branch and push if you try to commit on main branch
 - tools to make and merge prs and auto switch back to main when pr merges
 
+## [Download Release](https://raw.githubusercontent.com/seyahdoo/yo-git-tools/refs/heads/main/dist/yo.exe)
 
 # Setup
 
