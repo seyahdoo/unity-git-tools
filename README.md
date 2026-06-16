@@ -57,7 +57,7 @@ yo merge
 - will show incoming changes if found fetch
 - press to pull everything to curent branch
 - ctrl alt shift s to make a blank commit on current branch, will make a new temp branch if on main
-- ctrl alt shift z back to most recent commit
+- ctrl alt shift delete back to most recent commit
 - ctl alt shift p make a pr
 - crtl alt shift m merge current pr
 - ctrl alt shift f fetch and pull changes to current branch
