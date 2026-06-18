@@ -49,6 +49,8 @@ def new(args):
     run_or_throw(["git", "fetch", "--prune"])
     run_or_throw(["git", "switch", f"origin/{default_branch}", "--detach"])
     run_or_throw(["git", "switch", "-c", args.branch_name])
+    run_or_throw(["git", "commit", "--allow-empty", "-m", args.branch_name])
+    run_or_throw(["git", "push"])
     return 0
 
 def fetch(args):
@@ -74,8 +76,8 @@ def commit(args):
         return 1
 
     run_or_throw(["git", "add", "-A"])
-    run_or_throw(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
-    run_or_throw(["git", "push"])
+    run_or_throw(["git", "commit", "--amend", "--no-edit"])
+    run_or_throw(["git", "push", "--force-with-lease"])
     return 0
 
 def push(args):
