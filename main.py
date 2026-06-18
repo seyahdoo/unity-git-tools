@@ -41,25 +41,28 @@ def main():
     return args.func(args)
 
 def nuke(args):
-    result = run_or_throw(["git", "stash", "push", "--include-untracked"])
-    return result
+    run_or_throw(["git", "stash", "push", "--include-untracked"])
+    return 0
 
 def new(args):
     default_branch = get_default_branch()
     run_or_throw(["git", "fetch", "--prune"])
     run_or_throw(["git", "switch", f"origin/{default_branch}", "--detach"])
-    return run_or_throw(["git", "switch", "-c", args.branch_name])
+    run_or_throw(["git", "switch", "-c", args.branch_name])
+    return 0
 
 def fetch(args):
     default_branch = get_default_branch()
     run_or_throw(["git", "fetch", "--prune", "--progress"])
-    return run_or_throw(["git", "lfs", "fetch", "origin", default_branch])
+    run_or_throw(["git", "lfs", "fetch", "origin", default_branch])
+    return 0
 
 def pull(args):
     default_branch = get_default_branch()
     fetch(args)
-    run_or_throw(["git", "merge", f"origin/{default_branch}", "--no-edit"])
-    run_or_throw(["git", "push"])
+    run_or_throw(["git", "rebase", f"origin/{default_branch}"])
+    run_or_throw(["git", "push", "--force-with-lease"])
+    return 0
 
 def commit(args):
     default_branch = get_default_branch()
@@ -67,14 +70,17 @@ def commit(args):
     
     if current_branch == default_branch:
         print("Cannot fast commit on default branch")
+        # todo: just make a temp branch with temp message and commit anyways
         return 1
 
     run_or_throw(["git", "add", "-A"])
     run_or_throw(["git", "commit", "-a", "--allow-empty-message", "-m", "\'\'"])
-    return run_or_throw(["git", "push"])
+    run_or_throw(["git", "push"])
+    return 0
 
 def push(args):
-    return run_or_throw(["git", "push", "--tags"])
+    run_or_throw(["git", "push", "--tags"])
+    return 0
 
 def pr(args):
     token = get_github_access_token()
