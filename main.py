@@ -56,7 +56,7 @@ def new(args):
 def fetch(args):
     default_branch = get_default_branch()
     run_or_throw(["git", "fetch", "--prune", "--progress"])
-    run_or_throw(["git", "lfs", "fetch", "origin", default_branch])
+    run_or_throw(["git", "lfs", "fetch", "origin", f"origin/{default_branch}"])
     return 0
 
 def pull(args):
