@@ -11,8 +11,11 @@ def main():
 
     subparsers = parser.add_subparsers(help='command')
 
-    parser_nuke = subparsers.add_parser('nuke', help='clean the workplace non-destructively')
+    parser_nuke = subparsers.add_parser('nuke', help='clean the workplace very-destructively')
     parser_nuke.set_defaults(func=nuke)
+
+    parser_stash = subparsers.add_parser('stash', help='clean the workplace non-destructively')
+    parser_stash.set_defaults(func=stash)
 
     parser_new = subparsers.add_parser('new', help='creates a new branch from origin default and checks out')
     parser_new.add_argument('branch_name')
@@ -41,6 +44,11 @@ def main():
     return args.func(args)
 
 def nuke(args):
+    run_or_throw(["git", "reset", "--hard"])
+    run_or_throw(["git", "clean", "-f"])
+    return 0
+
+def stash(args):
     run_or_throw(["git", "stash", "push", "--include-untracked"])
     return 0
 
